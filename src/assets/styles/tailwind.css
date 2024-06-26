@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.transition {
+    transition-property: opacity, transform;
+  }
+  
+  .opacity-0 {
+    opacity: 0;
+  }
+  
+  .opacity-100 {
+    opacity: 1;
+  }
+  
+  .translate-x-0 {
+    transform: translateX(0);
+  }
+  
+  .translate-x-4 {
+    transform: translateX(1rem); /* Điều chỉnh khoảng cách di chuyển */
+  }
