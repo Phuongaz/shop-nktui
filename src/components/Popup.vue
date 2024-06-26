@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, defineProps } from 'vue'
+import { ref } from 'vue'
 
 const showPopup = ref(true)
 const emits = defineEmits(['close'])

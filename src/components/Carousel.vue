@@ -1,58 +1,64 @@
 <script lang="ts">
-export default {
-    props: {
-      products: Array,
-      carouselId: String,
-      classNameCarousel: String,
-      classNameForImage: String,
-      isAutoPlay: {
-        type: Boolean,
-        default: true
-      },
-      autoPlayMilliseconds: {
-        type: Number,
-        default: 5000
-      }
+import type { Product } from '@/store/products'
+
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  props: {
+    products: Array as () => Product[],
+    carouselId: String,
+    classNameCarousel: String,
+    classNameForImage: String,
+    isAutoPlay: {
+      type: Boolean,
+      default: true,
     },
-    data() {
-      return {
-        activeIndex: 0,
-        intervalId: null
-      };
+    autoPlayMilliseconds: {
+      type: Number,
+      default: 5000,
     },
-    methods: {
-      handleClickBtn(i) {
-        const href = `#Carousel_img_${i}`;
-        this.goToOtherImage(href);
-        this.activeIndex = i;
-      },
-      goToOtherImage(href) {
-        const carousel = document.getElementById(this.carouselId);
-        if (carousel) {
-          const target = document.querySelector(href);
+  },
+  data() {
+    return {
+      activeIndex: 0,
+      intervalId: null as NodeJS.Timeout | null,
+    };
+  },
+  methods: {
+    handleClickBtn(i: number) {
+      const href = `#Carousel_img_${i}`;
+      this.goToOtherImage(href);
+      this.activeIndex = i;
+    },
+    goToOtherImage(href: string) {
+      const carousel = document.getElementById(this.carouselId ?? "latest-products");
+      if (carousel) {
+        const target = document.querySelector(href);
+        if (target instanceof HTMLElement) {
           const left = target.offsetLeft;
           carousel.scrollTo({ left });
         }
       }
     },
-    mounted() {
-      if (this.isAutoPlay) {
-        this.intervalId = setInterval(() => {
-          const newActiveIndex =
-            this.activeIndex + 1 === this.products.length ? 0 : this.activeIndex + 1;
-          const href = `#Carousel_img_${newActiveIndex}`;
-          this.goToOtherImage(href);
-          this.activeIndex = newActiveIndex;
-        }, this.autoPlayMilliseconds);
-      }
-    },
-    beforeDestroy() {
-      clearInterval(this.intervalId);
-    },
-    getProductId(product) {
-      return product.id;
+  },
+  mounted() {
+    if (this.isAutoPlay) {
+      this.intervalId = setInterval(() => {
+        const newActiveIndex =
+          this.activeIndex + 1 === this.products?.length ? 0 : this.activeIndex + 1;
+        const href = `#Carousel_img_${newActiveIndex}`;
+        this.goToOtherImage(href);
+        this.activeIndex = newActiveIndex;
+      }, this.autoPlayMilliseconds);
     }
-  };
+  },
+  beforeDestroy() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
+      this.intervalId = null;
+    }
+  },
+});
 </script>
 
 <template>
